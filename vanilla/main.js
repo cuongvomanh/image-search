@@ -10,13 +10,19 @@ form.addEventListener('submit', formSubmitted);
 function formSubmitted(event) {
   event.preventDefault();
   const searchTerm = input.value;
-  console.log(searchTerm);
-  search(searchTerm).then(displayImages);
+  searchStart();
+  search(searchTerm)
+    .then(displayImages)
+    .then(() => {
+      loadingImage.style.display = 'none';
+    });
+}
+function searchStart() {
+  loadingImage.style.display = '';
+  imageSection.innerHTML = '';
 }
 function search(searchTerm) {
   const url = `${API_URL}${searchTerm}}`;
-  loadingImage.style.display = '';
-  imageSection.innerHTML = '';
   return fetch(url).then(response => response.json())
   .then(result => {
     return result.images;
@@ -28,5 +34,4 @@ function displayImages(images) {
     imageElement.src = image.image;
     imageSection.appendChild(imageElement);
   })
-  loadingImage.style.display = 'none';
 }
